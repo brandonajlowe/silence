@@ -2,6 +2,7 @@
   "name": "silence",
   "version": "0.1.0",
   "description": "Diff-scoped lint for code comments that narrate, decorate or cite records.",
+  "license": "MIT",
   "type": "module",
   "bin": {
     "silence": "src/cli.ts"

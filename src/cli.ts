@@ -1,4 +1,5 @@
 #!/usr/bin/env bun
+import { realpathSync } from "node:fs";
 import { relative } from "node:path";
 import { parseArgs } from "node:util";
 import { checkSource, type Finding } from "./check";
@@ -71,9 +72,10 @@ async function check(args: string[]): Promise<number> {
   }
   const mode: Mode = values.staged ? { kind: "staged" } : values.base ? { kind: "base", ref: values.base } : values.all ? { kind: "all" } : { kind: "head" };
 
-  const root = repoRoot(process.cwd());
-  if (!root) throw new UsageError("not inside a git repository");
-  const prefix = relative(root, process.cwd()).replaceAll("\\", "/");
+  const found = repoRoot(process.cwd());
+  if (!found) throw new UsageError("not inside a git repository");
+  const root = realpathSync.native(found);
+  const prefix = relative(root, realpathSync.native(process.cwd())).replaceAll("\\", "/");
   const wanted = positionals.map((p) => [prefix, p].filter(Boolean).join("/").replace(/^\.\/|\/$/g, "").replace(/^\.$/, ""));
   const inScope = (path: string) => wanted.length === 0 || wanted.some((w) => w === "" || path === w || path.startsWith(`${w}/`));
 

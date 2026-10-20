@@ -1,0 +1,24 @@
+{
+  "name": "silence",
+  "version": "0.1.0",
+  "description": "Diff-scoped lint for code comments that narrate, decorate or cite records.",
+  "type": "module",
+  "bin": {
+    "silence": "src/cli.ts"
+  },
+  "files": [
+    "src",
+    "grammars"
+  ],
+  "scripts": {
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "web-tree-sitter": "0.25.10"
+  },
+  "devDependencies": {
+    "@types/bun": "1.3.1",
+    "typescript": "5.9.3"
+  }
+}

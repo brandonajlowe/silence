@@ -90,6 +90,15 @@ describe("narration", () => {
     expect(await rules("// Stripe settles in cents\nconst total = amount * 100;\n")).toEqual([]);
   });
 
+  test("worked arithmetic is not narration", async () => {
+    const src = "// base ex = 4.545454 + 20 = 24.545454, discount ex = 2.454545\nAssert.Equal(0.454545m, Of(calc, 1).DocumentDiscountExTax);\n";
+    expect(await rules(src)).toEqual([]);
+  });
+
+  test("numbers the code already holds still narrate", async () => {
+    expect(await rules("// limit 3\nlimit = 3;\n")).toEqual(["narration:warning"]);
+  });
+
   test("doc comments are exempt", async () => {
     expect(await rules("/** Gets the user. */\nexport function getUser() {}\n")).toEqual([]);
   });

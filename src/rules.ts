@@ -31,6 +31,8 @@ const synonyms: [RegExp, string[]][] = [
   [/\breturn\b/, ["return"]],
 ];
 
+const number = /\d+(?:\.\d+)?/g;
+
 const stem = (w: string) => w.replace(/(ing|ed|es|s)$/, (m, _s, i: number) => (i >= 3 ? "" : m));
 
 function codeWords(code: string): Set<string> {
@@ -41,12 +43,14 @@ function codeWords(code: string): Set<string> {
     }
   }
   for (const [pattern, adds] of synonyms) if (pattern.test(code)) adds.forEach((w) => words.add(w));
+  for (const n of code.match(number) ?? []) words.add(n);
   return words;
 }
 
 function narrates(comment: Comment): boolean {
   if (comment.doc || !comment.next || reasonMarker.test(comment.body)) return false;
-  const words = (comment.body.toLowerCase().match(/[a-z]{2,}/g) ?? []).filter((w) => !stopwords.has(w)).map(stem);
+  // Numbers count as words so a worked calculation reads as content the code lacks.
+  const words = (comment.body.toLowerCase().match(/[a-z]{2,}|\d+(?:\.\d+)?/g) ?? []).filter((w) => !stopwords.has(w)).map(stem);
   if (words.length === 0 || words.length > 8) return false;
   const code = codeWords(comment.next);
   return words.filter((w) => code.has(w)).length / words.length >= 0.6;

@@ -1,6 +1,6 @@
 {
   "name": "silence",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Diff-scoped lint for code comments that narrate, decorate or cite records.",
   "license": "MIT",
   "type": "module",
